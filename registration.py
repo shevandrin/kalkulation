@@ -33,6 +33,18 @@ class User:
             res = True
         return res
 
+    @classmethod
+    def remove(cls, login):
+        if User.is_exist(login):
+            cursor = cnx.cursor()
+            cursor.execute("DELETE FROM User WHERE login = %s", (login, ))
+            cnx.commit()
+            cursor.close()
+            res = True
+        else:
+            res = False
+        return res
+
 
 def user_registration(data):
     if User.is_exist(data['login']):
@@ -42,4 +54,12 @@ def user_registration(data):
             msg = 'user ' + data['user_name'] + ' has registered'
         else:
             msg = 'the service is not available now'
+    return msg
+
+
+def user_remove(data):
+    if User.remove(data['login']):
+        msg = "user is removed"
+    else:
+        msg = "the service is not available now"
     return msg

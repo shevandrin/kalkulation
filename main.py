@@ -1,7 +1,9 @@
 from flask import Flask, request
 from mysql import connector
 
-from registration import user_registration, user_remove
+from registration import user_registration, user_remove, user_accounts
+from account import account_create, account_delete
+
 from conn import dbconfig
 app = Flask(__name__)
 app.config['MYSQL_USER'] = dbconfig['user']
@@ -28,16 +30,37 @@ def user(name):
 
 
 @app.route('/api/user/register', methods=['POST'])
-def register():
+def u_register():
     request_data = request.get_json()
     result = user_registration(request_data)
     return result
 
 
 @app.route('/api/user/delete', methods=['POST'])
-def delete():
+def u_delete():
     request_data = request.get_json()
     result = user_remove(request_data)
+    return result
+
+
+@app.route('/api/user/get_accounts', methods=['GET'])
+def u_accounts():
+    request_data = request.get_json()
+    result = user_accounts(request_data)
+    return result
+
+
+@app.route('/api/account/create', methods=['POST'])
+def acc_create():
+    request_data = request.get_json()
+    result = account_create(request_data)
+    return result
+
+
+@app.route('/api/account/delete', methods=['POST'])
+def acc_delete():
+    request_data = request.get_json()
+    result = account_delete(request_data)
     return result
 
 

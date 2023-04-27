@@ -12,10 +12,7 @@ class User:
         cursor = cnx.cursor()
         cursor.execute("SELECT * FROM User WHERE login = %s", (login, ))
         res = cursor.fetchall()
-        if len(res) > 0:
-            res = True
-        else:
-            res = False
+        res = True if len(res) > 0 else False
         cursor.close()
         return res
 
@@ -27,10 +24,7 @@ class User:
         user_id = cursor.lastrowid
         cnx.commit()
         cursor.close()
-        if user_id is None:
-            res = False
-        else:
-            res = True
+        res = False if user_id is None else True
         return res
 
     @classmethod
@@ -43,6 +37,14 @@ class User:
             res = True
         else:
             res = False
+        return res
+
+    @classmethod
+    def get_accounts(cls, user_id):
+        cursor = cnx.cursor()
+        cursor.execute("SELECT * FROM Account WHERE owner = %s", (user_id, ))
+        res = cursor.fetchall()
+        cursor.close()
         return res
 
 
@@ -63,3 +65,8 @@ def user_remove(data):
     else:
         msg = "the service is not available now"
     return msg
+
+
+def user_accounts(data):
+    res = User.get_accounts(data['user_id'])
+    return res
